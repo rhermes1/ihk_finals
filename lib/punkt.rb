@@ -36,6 +36,10 @@ class Punkt
     "(#{@x};#{@y})"
   end
 
+  def ==(other)
+    return (@x == other.x and @y == other.y)
+  end
+
   def >=(other)
     return (@x >= other.x and @y >= other.y)
   end
