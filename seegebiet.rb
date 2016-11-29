@@ -6,10 +6,6 @@ require_relative 'stroemungsgebiet'
 class Seegebiet
   attr_accessor :punktA, :punktB, :stroemungsgebiete, :debug
 
-  def dputs(string)
-    puts string if @debug
-  end
-
   def initialize(start, ende, stroemung_cfg, verbose=false)
     @debug = verbose
     @stroemungsgebiete = []
@@ -20,14 +16,14 @@ class Seegebiet
       @punktA = ende
       @punktB = start
     end
+    dputs("Initialize finished: #{self}")
     add_stroemung(start, ende, Vektor.new(1, 1))
     initializiere_stroemungen(stroemung_cfg)
-    dputs("Initialize finished: #{self}")
   end
 
   def add_stroemung(pkt_a, pkt_b, sv)
     if(is_v?(pkt_a) and is_v?(pkt_b)) then
-      new_sg = Stroemungsgebiet.new(pkt_a, pkt_b, sv)
+      new_sg = Stroemungsgebiet.new(pkt_a, pkt_b, sv, @debug)
       @stroemungsgebiete.each do |sg|
         if (new_sg == sg) then
           sg.sv = new_sg.sv
@@ -52,7 +48,10 @@ class Seegebiet
         dputs("ERROR: Not enough arguments for Stroemung!")
       end
     end
-    dputs("Initialize Stroemungen finished")
+  end
+
+  def dputs(string)
+    puts string if @debug
   end
 
   def is_v?(punkt)
