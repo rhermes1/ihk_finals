@@ -14,9 +14,9 @@ class TestVektor < Test::Unit::TestCase
     assert_equal(8, a.x);
     assert_equal(4, a.y);
 
-    assert_raise(ArgumentError) {
-      Vektor.new(@A, 5)
-    }
+    a = Vektor.new(7, 1)
+    assert_equal(7, a.x);
+    assert_equal(1, a.y);
   end
 
   def test_vektor_scalar_norm

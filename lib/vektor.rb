@@ -2,28 +2,28 @@
 
 class Vektor
   attr_accessor :kmh
-  @@point = nil
+  @point = nil
 
   def initialize(x, y, kmh = 1)
-    if (x.class.to_s == "Punkt" && y.class.to_s == "Punkt") then
-      @@point = y - x
+    if (x.is_a?(Punkt) && y.is_a?(Punkt)) then
+      @point = y - x
     else
-      raise ArgumentError.new("Expect two valid Points for x and y")
+      @point = Punkt.new(x, y)
     end
     @kmh = kmh
   end
 
   def norm
     norm_v = @kmh / self.scalar
-    @@point *= norm_v
+    @point *= norm_v
   end
 
   def x
-    @@point.x
+    return @point.x
   end
 
   def y
-    @@point.y
+    return @point.y
   end
 
   def scalar
@@ -31,6 +31,6 @@ class Vektor
   end
 
   def to_s
-    "#{@x}:#{@y}"
+    "#{x}:#{y}"
   end
 end

@@ -10,11 +10,19 @@ def dputs(string)
   puts string if @debug
 end
 
+def dputs_config(configs, file)
+  dputs "Found following Config from '#{file}'"
+  configs.keys.each do |key|
+    dputs "\nConfig for #{key}"
+    configs[key].each { |c| dputs c.join(" ") }
+  end
+end
+
 def read_config(path_file)
     f = File.new(path_file, "r")
     config_regexs = {
       "Description" => /\w+/,
-      "Gebietes" => /(\d+)\s+(\d+)/,
+      "Seegebiet" => /(\d+)\s+(\d+)/,
       "Route" => /\d+/,
       "Stroemungen" => /([\d\.\-]+)\s*/,
     }
@@ -45,6 +53,18 @@ def read_config(path_file)
     return configs
 end
 
+def check_config(configs)
+  unless(configs["Seegebiet"].flatten.length == 2) then
+    puts "Found too many values for Seegebiet. Exit!"
+    exit 0
+  end
+
+  unless(configs["Route"].flatten.length % 2 == 0) then
+    puts "Found odd counts of Route Points. Exit!"
+    exit 0
+  end
+end
+
 OptionParser.new do |opts|
   opts.banner = "Usage: main.rb [options]"
 
@@ -72,10 +92,7 @@ if (!options[:in_file] or !File.exist?(options[:in_file])) then
 end
 
 configs = read_config(options[:in_file])
-dputs "Found following Config from '#{options[:in_file]}'"
-configs.keys.each do |key|
-  dputs "\nConfig for #{key}"
-  configs[key].each { |c| dputs c.join(" ") }
-end
-
+dputs_config(configs, options[:in_file])
+check_config(configs)
+configs["verbose"] = @debug
 wsl = WhiteStarLine.new(configs)
