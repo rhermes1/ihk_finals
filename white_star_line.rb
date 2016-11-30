@@ -16,6 +16,13 @@ class WhiteStarLine
     @routen = []
     initialize_seegebiet(config)
     initialize_routen(config)
+    berechne_routen
+  end
+
+  def berechne_routen
+    @routen.each do |r|
+      r.berechne_route
+    end
   end
 
   def initialize_seegebiet(config)
@@ -32,7 +39,7 @@ class WhiteStarLine
         pkt1 = Punkt.new(ko[0], ko[1])
         pkt2 = Punkt.new(ko2[0], ko2[1])
         if(@seegebiet.is_v?(pkt1) and @seegebiet.is_v?(pkt2)) then
-          @routen << Route.new(pkt1, pkt2, @debug)
+          @routen << Route.new(pkt1, pkt2, @seegebiet, @debug)
         end
       end
     end

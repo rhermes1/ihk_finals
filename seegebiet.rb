@@ -26,7 +26,7 @@ class Seegebiet
       new_sg = Stroemungsgebiet.new(pkt_a, pkt_b, sv, @debug)
       @stroemungsgebiete.each do |sg|
         if (new_sg == sg) then
-          sg.sv = new_sg.sv
+          sg.sv= new_sg.sv
           new_sg = nil
           dputs("INFO: Overwrite old sv.\nNew: #{sg}")
         end
@@ -48,6 +48,23 @@ class Seegebiet
         dputs("ERROR: Not enough arguments for Stroemung!")
       end
     end
+  end
+
+  def get_teilstueck(start, ende)
+    dputs("Look for Teilstueck between #{start} : #{ende}")
+    iv = Vektor.new(start, ende)
+    ip = ende
+    @stroemungsgebiete.each do |sg|
+      ip2 = sg.get_intersection(start, ende)
+      iv2 = Vektor.new(start, ip2)
+      if (iv2.scalar < iv.scalar and ip2 != start) then
+        dputs("Set shorter Teilstueck from #{start} to #{ip2}")
+        ip = ip2
+        iv = iv2
+      end
+    end
+
+    return [ip, iv]
   end
 
   def dputs(string)

@@ -1,14 +1,27 @@
 #!/usr/bin/env ruby
 require_relative "../route"
+require_relative "../seegebiet"
 require "test/unit"
  
 class TestRoute < Test::Unit::TestCase
-  def test_create_route
-    p1 = Punkt.new(0, 0)
-    p2 = Punkt.new(40, 40)
-    sg = Route.new(p2, p1)
+  def setup
+    @p1 = Punkt.new(0, 0)
+    @p2 = Punkt.new(40, 40)
+  end
 
-    assert_equal(p1, sg.punktA)
-    assert_equal(p2, sg.punktB)
+  def test_create_route
+    sg = Seegebiet.new(@p1, Punkt.new(50, 50), [])
+    route = Route.new(@p2, @p1, sg)
+
+    assert_equal(@p1, route.ende)
+    assert_equal(@p2, route.start)
+  end
+
+  def test_expected_teilstuecke
+    sg = Seegebiet.new(@p1, Punkt.new(50, 50), [])
+    route = Route.new(@p2, @p1, sg)
+
+    route.berechne_route
+    assert_equal(1, route.ts.length)
   end
 end
