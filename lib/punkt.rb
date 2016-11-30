@@ -4,20 +4,8 @@ class Punkt
   attr_accessor :x, :y
 
   def initialize(x, y)
-    @x = convert_value(x)
-    @y = convert_value(y)
-  end
-
-  def convert_value(v)
-    if(v.is_a?(String)) then
-      if(v.to_f.to_s == v) then
-        return  v.to_f
-      else
-        return v.to_i
-      end
-    else
-      return v
-    end
+    @x = x.to_f
+    @y = y.to_f
   end
 
   def +(other)

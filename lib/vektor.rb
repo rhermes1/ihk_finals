@@ -27,7 +27,7 @@ class Vektor
   end
 
   def scalar
-    return Math.sqrt((x**2)+(y**2))
+    return Math.sqrt((x**2)+(y**2)).to_f
   end
 
   def to_s
