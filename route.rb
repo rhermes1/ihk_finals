@@ -6,9 +6,7 @@ require_relative 'teilstueck'
 class Route
   attr_accessor :start, :ende, :ts, :debug, :seegebiet
 
-  def initialize(start, ende, seegebiet, debug=false)
-    @start = start
-    @ende = ende
+  def initialize(seegebiet, debug=false)
     @debug = debug
     @seegebiet = seegebiet
     @ts = []
@@ -19,8 +17,9 @@ class Route
     puts string if @debug
   end
 
-  def berechne_route
-    dputs("Start calculating Route")
+  def berechne_route(start, ende)
+    @start, @ende = start, ende
+    dputs("Start calculating Route from #{@start} to #{@ende}")
     berechne_teilstuecke(@start, @ende)
   end
 
@@ -33,6 +32,10 @@ class Route
   end
 
   def to_s
-    "\n\nDaten fuer die Planung der Route:\n " + @ts.join("\n\n ")
+    if @ts.empty? then
+      return "Route von #{@start} bis #{@ende}"
+    else
+      return "\n\nDaten fuer die Planung der Route:\n " + @ts.join("\n\n ")
+    end
   end
 end

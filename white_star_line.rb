@@ -5,7 +5,7 @@ require_relative 'route.rb'
 require_relative 'seegebiet.rb'
 
 class WhiteStarLine
-  attr_accessor :seegebiet, :routen, :zielpunkte, :debug, :description
+  attr_accessor :seegebiet, :route, :zielpunkte, :debug, :description
 
   def dputs(string)
     puts string if @debug
@@ -13,16 +13,19 @@ class WhiteStarLine
 
   def initialize(config)
     @debug = config["verbose"]
+    @zielpunkte = []
     @description = config["Description"].join(" ")
-    @routen = []
     initialize_seegebiet(config)
-    initialize_routen(config)
+    initialize_route(config)
     berechne_routen
   end
 
   def berechne_routen
-    @routen.each do |r|
-      r.berechne_route
+    @zielpunkte.each_with_index do |pkt, index|
+      pkt2 = @zielpunkte[index+1]
+      if(pkt and pkt2) then
+        @route.berechne_route(pkt, pkt2)
+      end
     end
   end
 
@@ -32,16 +35,15 @@ class WhiteStarLine
       cfg[1]), config["Stroemungen"], @debug)
   end
 
-  def initialize_routen(config)
+  def initialize_route(config)
     cfg = config["Route"].flatten().each_slice(2).to_a
-    cfg.each_with_index do |ko, index|
-      ko2 = cfg[index+1]
-      if (ko and ko2) then
-        pkt1 = Punkt.new(ko[0], ko[1])
-        pkt2 = Punkt.new(ko2[0], ko2[1])
-        if(@seegebiet.is_v?(pkt1) and @seegebiet.is_v?(pkt2)) then
-          @routen << Route.new(pkt1, pkt2, @seegebiet, @debug)
-        end
+    @route = Route.new(@seegebiet, @debug)
+    cfg.each do |pkt|
+      pkt1 = Punkt.new(pkt[0], pkt[1])
+      if(@seegebiet.is_v?(pkt1)) then
+        @zielpunkte << pkt1
+      else
+        dputs("ERROR: #{pkt1} is out of Seegebiet range")
       end
     end
   end
@@ -51,6 +53,8 @@ class WhiteStarLine
     @description + "\n" +
     "*" * @description.length() + "\n\n" +
     @seegebiet.to_s +
-    @routen.join("\n")
+    "\n\nzu fahrende Route\n" +
+    @zielpunkte.each_with_index.map {|a,i| " Punkt #{i}: #{a}\n" }.join("\n") +
+    @route.to_s
   end
 end

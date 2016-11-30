@@ -39,10 +39,10 @@ class Seegebiet
 
   def initializiere_stroemungen(cfg)
     cfg.each do |s_cfg|
-      if(s_cfg.length == 6) then
+      if(s_cfg.length.between?(4, 6)) then
         pktA = Punkt.new(s_cfg[0], s_cfg[1])
         pktB = Punkt.new(s_cfg[2], s_cfg[3])
-        sv = Vektor.new(s_cfg[4], s_cfg[5])
+        sv = s_cfg.length == 6 ? Vektor.new(s_cfg[4], s_cfg[5]) : Vektor.new(0, 0)
         add_stroemung(pktA, pktB, sv)
       else
         dputs("ERROR: Not enough arguments for Stroemung!")
@@ -56,15 +56,17 @@ class Seegebiet
     ip = ende
 
     @stroemungsgebiete.each do |sg|
+      dputs("-Check: #{sg}")
       ip2 = sg.get_intersection(start, ende)
-      if (Vektor.new(start, ip2).scalar <= dist and ip2 != start) then
-        dputs("Set shorter Teilstueck from #{start} to #{ip2}")
-        ip, dist = ip2, Vektor.new(start, ip2).scalar
+      dist2 = Vektor.new(start, ip2).scalar
+      if (dist <= dist2 and sg.has_point?(ip)) or (dist2 <= dist) then
+        dputs("--new Teilstueck from #{start} to #{ip2}")
+        ip, dist = ip2, dist2
       end
     end
 
-    iv = @stroemungsgebiete.reduce(nil) do |acc, sg|
-      acc = sg.sv if sg.has_point?(start)
+    iv = @stroemungsgebiete.reduce(Vektor.new(start, ende)) do |acc, sg|
+      acc = sg.sv if (sg.has_point?(start) and sg.has_point?(ende))
       acc
     end
 
@@ -76,7 +78,7 @@ class Seegebiet
   end
 
   def is_v?(punkt)
-    return (punkt <= @punktB && punkt >= @punktA)
+    return (punkt <= @punktB and punkt >= @punktA)
   end
 
   def to_s

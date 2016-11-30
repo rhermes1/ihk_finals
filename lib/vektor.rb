@@ -36,6 +36,6 @@ class Vektor
   end
 
   def to_s
-    "(#{x};#{y})"
+    "(#{x.round(1)};#{y.round(1)})"
   end
 end

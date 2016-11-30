@@ -42,7 +42,8 @@ class Stroemungsgebiet
   end
 
   def has_point?(p)
-    return (p <= @punktB and @punktA <= p)
+    return ((p <= @punktB and @punktA <= p) or
+      (p <= @punktA and @punktB <= p))
   end
 
   def dputs(string)
@@ -58,7 +59,7 @@ class Stroemungsgebiet
     @geraden.each do |g|
       if(g.intersect?(sg)) then
         ip2 = g.intersection_point(sg)
-        next unless ip2
+        next if(not ip2 or ip2 == start)
         iv2 = Vektor.new(start, ip2)
         if (iv2.scalar <= iv.scalar) then
           ip = ip2
@@ -72,26 +73,5 @@ class Stroemungsgebiet
 
   def to_s
     "#{@punktA} #{@punktB} SV = #{@sv}"
-  end
-
-  def get_intersection(start, ende)
-    sg = Gerade.new(start, ende)
-    iv = Vektor.new(start, ende)
-    ip = ende
-
-    return ip if has_point?(start) and has_point?(ende)
-    @geraden.each do |g|
-      if(g.intersect?(sg)) then
-        ip2 = g.intersection_point(sg)
-        next unless ip2
-        iv2 = Vektor.new(start, ip2)
-        if (iv2.scalar <= iv.scalar) then
-          ip = ip2
-          iv = iv2
-        end
-      end
-    end
-
-    return ip
   end
 end
