@@ -4,7 +4,7 @@ class Vektor
   attr_accessor :kmh
   @point = nil
 
-  def initialize(x, y, kmh = 1)
+  def initialize(x, y, kmh=1)
     if (x.is_a?(Punkt) && y.is_a?(Punkt)) then
       @point = y - x
     else
@@ -15,7 +15,7 @@ class Vektor
 
   def norm
     norm_v = @kmh / self.scalar
-    @point *= norm_v
+    return Vektor.new(x*norm_v, y*norm_v)
   end
 
   def x
@@ -26,11 +26,16 @@ class Vektor
     return @point.y
   end
 
+  def -(other)
+    return unless other
+    return Vektor.new(Punkt.new(other.x, other.y), @point)
+  end
+
   def scalar
     return Math.sqrt((x**2)+(y**2)).to_f
   end
 
   def to_s
-    "#{x}:#{y}"
+    "(#{x};#{y})"
   end
 end

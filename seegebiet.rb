@@ -17,7 +17,7 @@ class Seegebiet
       @punktB = start
     end
     dputs("Initialize finished: #{self}")
-    add_stroemung(start, ende, Vektor.new(1, 1))
+    add_stroemung(start, ende, Vektor.new(0, 0))
     initializiere_stroemungen(stroemung_cfg)
   end
 
@@ -52,16 +52,20 @@ class Seegebiet
 
   def get_teilstueck(start, ende)
     dputs("Look for Teilstueck between #{start} : #{ende}")
-    iv = Vektor.new(start, ende)
+    dist = Vektor.new(start, ende).scalar
     ip = ende
+
     @stroemungsgebiete.each do |sg|
       ip2 = sg.get_intersection(start, ende)
-      iv2 = Vektor.new(start, ip2)
-      if (iv2.scalar < iv.scalar and ip2 != start) then
+      if (Vektor.new(start, ip2).scalar <= dist and ip2 != start) then
         dputs("Set shorter Teilstueck from #{start} to #{ip2}")
-        ip = ip2
-        iv = iv2
+        ip, dist = ip2, Vektor.new(start, ip2).scalar
       end
+    end
+
+    iv = @stroemungsgebiete.reduce(nil) do |acc, sg|
+      acc = sg.sv if sg.has_point?(start)
+      acc
     end
 
     return [ip, iv]
@@ -76,6 +80,8 @@ class Seegebiet
   end
 
   def to_s
-    "Seegebiet von #{@punktA} bis #{@punktB}"
+    "Groesse des Gebietes\n #{@punktB.x} #{@punktB.y}" +
+      "\n\nStroemungen\n " + @stroemungsgebiete.join("\n\n ")
+
   end
 end

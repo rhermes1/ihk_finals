@@ -88,3 +88,4 @@ configs = read_config(options[:in_file])
 check_config(configs)
 configs["verbose"] = @debug
 wsl = WhiteStarLine.new(configs)
+puts wsl

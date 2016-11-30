@@ -5,7 +5,7 @@ require_relative 'route.rb'
 require_relative 'seegebiet.rb'
 
 class WhiteStarLine
-  attr_accessor :seegebiet, :routen, :zielpunkte, :debug
+  attr_accessor :seegebiet, :routen, :zielpunkte, :debug, :description
 
   def dputs(string)
     puts string if @debug
@@ -13,6 +13,7 @@ class WhiteStarLine
 
   def initialize(config)
     @debug = config["verbose"]
+    @description = config["Description"].join(" ")
     @routen = []
     initialize_seegebiet(config)
     initialize_routen(config)
@@ -43,5 +44,13 @@ class WhiteStarLine
         end
       end
     end
+  end
+
+  def to_s
+    "*" * @description.length() + "\n" +
+    @description + "\n" +
+    "*" * @description.length() + "\n\n" +
+    @seegebiet.to_s +
+    @routen.join("\n")
   end
 end

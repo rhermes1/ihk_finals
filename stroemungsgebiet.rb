@@ -14,6 +14,7 @@ class Stroemungsgebiet
   def initialize(start, ende, sv, debug=false)
     @debug = debug
     @geraden = []
+    @sv = sv
     if (start <= ende) then
       @punktA = start
       @punktB = ende
@@ -23,7 +24,6 @@ class Stroemungsgebiet
     end
     initialize_geraden
 
-    @sv = sv
     dputs("Initialize finished: #{self}")
   end
   
@@ -49,8 +49,29 @@ class Stroemungsgebiet
     puts string if @debug
   end
 
+  def get_intersection(start, ende)
+    sg = Gerade.new(start, ende)
+    iv = Vektor.new(start, ende)
+    ip = ende
+
+    return ip if has_point?(start) and has_point?(ende)
+    @geraden.each do |g|
+      if(g.intersect?(sg)) then
+        ip2 = g.intersection_point(sg)
+        next unless ip2
+        iv2 = Vektor.new(start, ip2)
+        if (iv2.scalar <= iv.scalar) then
+          ip = ip2
+          iv = iv2
+        end
+      end
+    end
+
+    return ip
+  end
+
   def to_s
-    "Stroemungsgebiet von #{@punktA} bis #{@punktB} mit SV #{@sv}"
+    "#{@punktA} #{@punktB} SV = #{@sv}"
   end
 
   def get_intersection(start, ende)
