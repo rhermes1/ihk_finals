@@ -77,7 +77,9 @@ def execute_whitestar_line(input, output="-")
   check_config(configs)
   configs["verbose"] = @debug
   wsl = WhiteStarLine.new(configs)
-  puts wsl
+  description = configs["Description"].join(" ")
+  sep = "*" * description.length + "\n"
+  puts sep + description + "\n" + sep + wsl.to_s
 end
 
 OptionParser.new do |opts|

@@ -24,7 +24,7 @@ class Route
   end
 
   def berechne_teilstuecke(start, ende)
-    ipc, ipv = @seegebiet.get_teilstueck(start, ende)
+    ipc, ipv = @seegebiet.erfasse_teilstueck(start, ende)
     @ts << Teilstueck.new(start, ipc, ipv)
     if(ipc != ende) then
       berechne_teilstuecke(ipc, ende)

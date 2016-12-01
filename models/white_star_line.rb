@@ -5,7 +5,7 @@ require_relative 'route.rb'
 require_relative 'seegebiet.rb'
 
 class WhiteStarLine
-  attr_accessor :seegebiet, :route, :zielpunkte, :debug, :description
+  attr_accessor :seegebiet, :route, :zielpunkte, :debug
 
   def dputs(string)
     puts string if @debug
@@ -14,7 +14,6 @@ class WhiteStarLine
   def initialize(config)
     @debug = config["verbose"]
     @zielpunkte = []
-    @description = config["Description"].join(" ")
     initialize_seegebiet(config)
     initialize_route(config)
     berechne_routen
@@ -30,12 +29,14 @@ class WhiteStarLine
   end
 
   def initialize_seegebiet(config)
+    return unless config["Seegebiet"]
     cfg = config["Seegebiet"].flatten()
     @seegebiet = Seegebiet.new(Punkt.new(0, 0), Punkt.new(cfg[0],
       cfg[1]), config["Stroemungen"], @debug)
   end
 
   def initialize_route(config)
+    return unless config["Route"]
     cfg = config["Route"].flatten().each_slice(2).to_a
     @route = Route.new(@seegebiet, @debug)
     cfg.each do |pkt|
@@ -49,9 +50,6 @@ class WhiteStarLine
   end
 
   def to_s
-    "*" * @description.length() + "\n" +
-    @description + "\n" +
-    "*" * @description.length() + "\n\n" +
     @seegebiet.to_s +
     "\n\nzu fahrende Route\n" +
     @zielpunkte.each_with_index.map {|a,i| " Punkt #{i}: #{a}\n" }.join("\n") +
