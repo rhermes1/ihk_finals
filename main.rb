@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require 'optparse'
-require_relative 'white_star_line'
+require_relative 'models/white_star_line'
 
 options = {}
 descriptions = {}
@@ -47,15 +47,37 @@ end
 
 def check_config(configs)
   unless(configs["Seegebiet"].flatten.length == 2) then
-    puts "Found too many values for Seegebiet. Exit!"
+    puts "Found too many values for Seegebiet. Exit!\nConfig: "
+    puts configs["Route"].flatten.join(", ")
     exit 0
   end
 
   rlength = configs["Route"].flatten.length
   if(!(rlength >= 4) or (rlength % 2) != 0) then
     puts "Routen Punkte config is wrong. Exit!"
+    puts configs["Route"].flatten.join(", ")
     exit 0
   end
+
+  scfgs = configs["Stroemungen"]
+  scfgs.each do |scfg|
+    if (scfg.length != 4 and scfg.length != 6) then
+      puts "Stroemungen config is wrong. Exit!\nConfig: "
+      puts scfg.join(", ")
+      exit 0
+    end
+  end
+end
+
+def execute_whitestar_line(input, output="-")
+  if(!input or File.exist?(input)) then
+    puts "No valid Input file given. Got: '#{input}'. Exit!"
+  end
+  configs = read_config(input)
+  check_config(configs)
+  configs["verbose"] = @debug
+  wsl = WhiteStarLine.new(configs)
+  puts wsl
 end
 
 OptionParser.new do |opts|
@@ -73,19 +95,10 @@ OptionParser.new do |opts|
   opts.on("-o", "--output [FILE]", String, "Defines the Output file. Default is STDOUT") do |f|
     options[:out_file] = f
   end
+
+  opts.on("-t", "--test", "Executes all tests in 'tests/'") do |t|
+    options[:tests] = t
+  end
 end.parse!
 
-if (!options[:in_file] or !File.exist?(options[:in_file])) then
-  if(options[:in_file]) then
-    puts "Can't find Input File: '#{options[:in_file]}'. Exit!"
-  else
-    puts "No Input File given. Exit!"
-  end
-  exit 0
-end
-
-configs = read_config(options[:in_file])
-check_config(configs)
-configs["verbose"] = @debug
-wsl = WhiteStarLine.new(configs)
-puts wsl
+execute_whitestar_line(options[:in_file], options[:out_file])

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
-require_relative 'lib/vektor.rb'
-require_relative 'lib/punkt.rb'
-require_relative 'lib/gerade.rb'
+require_relative '../lib/vektor.rb'
+require_relative '../lib/punkt.rb'
+require_relative '../lib/gerade.rb'
 
 
 #C------B
