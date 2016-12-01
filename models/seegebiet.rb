@@ -52,8 +52,7 @@ class Seegebiet
 
   def erfasse_teilstueck(start, ende)
     dputs("Look for Teilstueck between #{start} : #{ende}")
-    dist = Vektor.new(start, ende).scalar
-    ip = ende
+    dist, ip = Vektor.new(start, ende).scalar, ende
 
     @stroemungsgebiete.each do |sg|
       dputs("-Check: #{sg}")
@@ -62,7 +61,7 @@ class Seegebiet
 
       if (dist <= dist2 and sg.has_point?(ip)) or (dist2 <= dist) then
         dputs("--new Teilstueck from #{start} to #{ip2}")
-        ip, dist, sv = ip2, dist2, sg.sv
+        ip, dist = ip2, dist2
       end
     end
 

@@ -51,9 +51,7 @@ class Stroemungsgebiet
   end
 
   def get_intersection(start, ende)
-    sg = Gerade.new(start, ende)
-    iv = Vektor.new(start, ende)
-    ip = ende
+    sg, iv, ip = Gerade.new(start, ende), Vektor.new(start, ende), ende
 
     return ip if has_point?(start) and has_point?(ende)
     @geraden.each do |g|
@@ -61,10 +59,7 @@ class Stroemungsgebiet
         ip2 = g.intersection_point(sg)
         next if(not ip2 or ip2 == start)
         iv2 = Vektor.new(start, ip2)
-        if (iv2.scalar <= iv.scalar) then
-          ip = ip2
-          iv = iv2
-        end
+        ip, iv = ip2, iv2 if (iv2.scalar <= iv.scalar)
       end
     end
 
