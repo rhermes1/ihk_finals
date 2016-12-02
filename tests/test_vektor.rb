@@ -23,8 +23,8 @@ class TestVektor < Test::Unit::TestCase
     a = Vektor.new(@A, @E, 5)
     assert_equal(Math.sqrt(80), a.scalar);
 
-    a.norm
-    assert_equal(4.472, a.x);
-    assert_equal(2.236, a.y);
+    b = a.norm
+    assert_equal(4.472, b.x.round(3));
+    assert_equal(2.236, b.y.round(3));
   end
 end

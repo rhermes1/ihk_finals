@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
-require_relative "../route"
-require_relative "../seegebiet"
+require_relative "../models/route"
+require_relative "../models/seegebiet"
 require "test/unit"
  
 class TestRoute < Test::Unit::TestCase
@@ -11,17 +11,16 @@ class TestRoute < Test::Unit::TestCase
 
   def test_create_route
     sg = Seegebiet.new(@p1, Punkt.new(50, 50), [])
-    route = Route.new(@p2, @p1, sg)
+    route = Route.new(sg)
 
-    assert_equal(@p1, route.ende)
-    assert_equal(@p2, route.start)
+    assert_equal(0, route.ts.length)
   end
 
   def test_expected_teilstuecke
     sg = Seegebiet.new(@p1, Punkt.new(50, 50), [])
-    route = Route.new(@p2, @p1, sg)
+    route = Route.new(sg)
 
-    route.berechne_route
+    route.berechne_route(@p1, @p2)
     assert_equal(1, route.ts.length)
   end
 end

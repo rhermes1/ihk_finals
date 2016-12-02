@@ -4,8 +4,8 @@ class Punkt
   attr_accessor :x, :y
 
   def initialize(x, y)
-    @x = x.to_f.round(3)
-    @y = y.to_f.round(3)
+    @x = x.to_f
+    @y = y.to_f
   end
 
   def +(other)
@@ -21,7 +21,7 @@ class Punkt
   end
 
   def to_s
-    "(#{@x};#{@y})"
+    "(#{@x.round(3)};#{@y.round(3)})"
   end
 
   def ==(other)

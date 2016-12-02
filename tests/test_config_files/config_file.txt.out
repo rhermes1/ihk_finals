@@ -1,0 +1,45 @@
+*******************************
+Beispiel 3 der Aufgabenstellung
+*******************************
+Groesse des Gebietes
+ 35.0 30.0
+
+Stroemungen
+ (0.0;0.0) (35.0;30.0) SV = (1.0;-1.0)
+
+ (0.0;0.0) (15.0;25.0) SV = (1.8;0.9)
+
+ (15.0;10.0) (25.0;30.0) SV = (1.0;0.0)
+
+ (15.0;0.0) (35.0;10.0) SV = (2.1;-2.1)
+
+zu fahrende Route
+ Punkt 0: (5.0;30.0)
+
+ Punkt 1: (25.0;5.0)
+
+
+Daten fuer die Planung der Route:
+ Strecke von (5.0;30.0) nach (9.0;25.0)
+  Entfernung: 6.4 km
+  SKV = (2.1;-2.9)
+  Sollgeschwindigkeit: 3.6 km/h
+  Fahrzeit: 1.8 h
+
+ Strecke von (9.0;25.0) nach (15.0;17.5)
+  Entfernung: 9.6 km
+  SKV = (1.3;-4.8)
+  Sollgeschwindigkeit: 5.0 km/h
+  Fahrzeit: 1.9 h
+
+ Strecke von (15.0;17.5) nach (21.0;10.0)
+  Entfernung: 9.6 km
+  SKV = (2.1;-3.9)
+  Sollgeschwindigkeit: 4.4 km/h
+  Fahrzeit: 2.2 h
+
+ Strecke von (21.0;10.0) nach (25.0;5.0)
+  Entfernung: 6.4 km
+  SKV = (1.0;-1.8)
+  Sollgeschwindigkeit: 2.0 km/h
+  Fahrzeit: 3.2 h

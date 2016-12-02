@@ -29,7 +29,7 @@ class Teilstueck
 
   def berechne_dauer()
     return if not (@dist and @kmh)
-    @time = (@dist / @kmh).round(3)
+    @time = (@dist / @kmh).round(1)
   end
 
   def to_s

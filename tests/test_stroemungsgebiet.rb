@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-require_relative "../stroemungsgebiet"
+require_relative "../models/stroemungsgebiet"
 require "test/unit"
  
 class TestStroemungsgebiet < Test::Unit::TestCase

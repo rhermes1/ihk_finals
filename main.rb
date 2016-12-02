@@ -10,7 +10,7 @@ def dputs(string)
   puts string if @debug
 end
 
-def read_config(path_file)
+def read_config(path_file, test=false)
     f = File.new(path_file, "r")
     config_regexs = {
       "Description" => /\w+/,
@@ -41,11 +41,12 @@ def read_config(path_file)
       puts config_regexs.keys.join("\n")
       exit 0
     end
+    check_config(configs, test)
 
     return configs
 end
 
-def check_config(configs)
+def check_config(configs, test)
   unless(configs["Seegebiet"].flatten.length == 2) then
     puts "Found too many values for Seegebiet. Exit!\nConfig: "
     puts configs["Route"].flatten.join(", ")
@@ -69,17 +70,50 @@ def check_config(configs)
   end
 end
 
-def execute_whitestar_line(input, output="-")
-  if(!input or File.exist?(input)) then
-    puts "No valid Input file given. Got: '#{input}'. Exit!"
+def create_whitestar_line_from_config(cfg_path)
+  if(!cfg_path or File.directory?(cfg_path)) then
+    puts "No valid Input file given. Got: '#{cfg_path}'. Exit!"
+    exit 0 
   end
-  configs = read_config(input)
-  check_config(configs)
+  configs = read_config(cfg_path)
   configs["verbose"] = @debug
-  wsl = WhiteStarLine.new(configs)
-  description = configs["Description"].join(" ")
+  return [WhiteStarLine.new(configs), configs["Description"].join(" ")]
+end
+
+def execute_all_tests()
+  Dir.foreach('./tests/') do |test_file|
+    next if [".", ".."].include?(test_file) or File.directory?(test_file)
+    dputs("\nExecute Test #{test_file}\n")
+    system("ruby ./tests/#{test_file}")
+  end
+
+  test_path_dir = './tests/test_config_files/'
+  dputs("\nExecute test_config_files from #{test_path_dir}\n")
+
+  Dir.foreach(test_path_dir) do |test_file|
+    next if [".", ".."].include?(test_file) or File.directory?(test_file)
+    next if test_file.match(/\.out$/)
+
+    dputs("\nCreate WSL with config from #{test_file}\n")
+    wsl, desc = create_whitestar_line_from_config(test_path_dir + test_file)
+    sep = "*" * desc.length + "\n"
+    puts sep + desc + "\n" + sep + wsl.to_s
+  end
+end
+
+def execute_whitestar_line(input, output="")
+
+  wsl, description = create_whitestar_line_from_config(input)
   sep = "*" * description.length + "\n"
-  puts sep + description + "\n" + sep + wsl.to_s
+  out_str = sep + description + "\n" + sep + wsl.to_s
+
+  if(output) then
+    open(output, 'w') { |f|
+        f.puts out_str
+    }
+  else
+     puts out_str
+  end
 end
 
 OptionParser.new do |opts|
@@ -103,4 +137,10 @@ OptionParser.new do |opts|
   end
 end.parse!
 
-execute_whitestar_line(options[:in_file], options[:out_file])
+if(options[:tests]) then
+  dputs("Execute all tests!")
+  execute_all_tests()
+else
+  execute_whitestar_line(options[:in_file], options[:out_file])
+end
+

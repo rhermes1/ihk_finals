@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-require_relative "../seegebiet"
+require_relative "../models/seegebiet"
 require "test/unit"
  
 class TestSeegebiet < Test::Unit::TestCase
@@ -20,7 +20,7 @@ class TestSeegebiet < Test::Unit::TestCase
     assert_equal(p2, sg.punktB)
     assert_equal(4, sg.stroemungsgebiete.length)
 
-    assert_equal(sg.stroemungsgebiete.first.sv.x, 1)
+    assert_equal(sg.stroemungsgebiete.first.sv.x, 0)
     assert_not_equal(sg.stroemungsgebiete[2].sv.x, 3.0)
     assert_equal(sg.stroemungsgebiete.last.sv.x, 2.121)
   end

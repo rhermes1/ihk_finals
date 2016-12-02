@@ -1,0 +1,9 @@
+; *********************************
+; Gebiet ohne Stroemung. 
+; *********************************
+; Groesse des Gebietes
+35 30
+; zu fahrende Route
+5 30 25 5 
+; Stroemungen
+0 0 1 1 
